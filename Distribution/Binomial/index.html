@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.1); /* Translucent background */
+        }
+
+        .container {
+            width: 600px;
+            background-color: rgba(235, 235, 235, 0.8); /* Translucent background */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        h2, h3 {
+            margin: 0;
+        }
+
+        .Main {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .submain
+        {
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Binomial Distribution Generator</h2>
+        <h3>X ~ Bin(n,p)</h3>
+    </div>
+    <div class="Main">
+        <table>
+            <tr>
+                <td>n = </td>
+                <td><input type="text" id="n" name="n" required/></td>
+                <td>p = </td>
+                <td><input type="text" id="p" name="p" required/></td>
+            </tr>
+            <tr>
+                <td>x = </td>
+                <td><input type="text" id="x" name="x" required/></td>
+                <td>
+                    <select name="x-value" id="x-value">
+                        <option value="equal">P(X=x)</option>
+                        <option value="less">P(X<=x)</option>
+                        <option value="greater">P(X>=x)</option>
+                    </select>
+                </td>
+                <td><input type="text" id="ans" name="ans"/></td>
+            </tr>
+        </table>
+    </div>
+    <div id="submain"></div>
+
+</div>
+<script>
+    document.getElementById("x-value").addEventListener("input", function() {
+        var n = parseFloat(document.getElementById("n").value);
+        var p = parseFloat(document.getElementById("p").value);
+        var x = parseFloat(document.getElementById("x").value);
+        var ans = document.getElementById("ans");
+        var selectedOption = document.getElementById("x-value").value;
+    
+        if (selectedOption === "equal") {
+            ans.value = calculateBinomialProbability(x, n, p).toFixed(4);;
+        } else if (selectedOption === "less") {
+            var probability = 0;
+            for (var i = 0; i <= x; i++) {
+                probability += calculateBinomialProbability(i, n, p);
+            }
+            ans.value = probability.toFixed(4);;
+        } else if (selectedOption === "greater") {
+            var probability = 0;
+            for (var i = x; i <= n; i++) {
+                probability += calculateBinomialProbability(i, n, p);
+            }
+            ans.value = probability.toFixed(4);;
+        }
+        var sub = document.getElementById("submain");
+        sub.innerHTML = "<br>Mean = E(x) = " + (n * p) + " Variance = E(x^2) = " + (n * p * (1 - p));
+
+        
+    });
+    
+    function calculateBinomialProbability(x, n, p) {
+        var q = 1 - p;
+        var coefficient = factorial(n) / (factorial(x) * factorial(n - x));
+        return coefficient * Math.pow(p, x) * Math.pow(q, n - x);
+    }
+    
+    function factorial(num) {
+        var result = 1;
+        for (var i = 2; i <= num; i++) {
+            result *= i;
+        }
+        return result;
+    }
+</script>
+</body>
+</html>
